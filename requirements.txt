@@ -4,3 +4,4 @@ Flask-JWT-Extended==4.3.0
 MongoEngine==0.24.1
 pymongo==3.12.1
 gunicorn
+Werkzeug<2.1
