@@ -89,6 +89,10 @@ def get_form_data():
         return jsonify({'message': 'No form data found'}), 200
     data = []
     for user in users:
+        partnership_total = sum(p.amount for p in user.partnership)
+        givings_total = sum(g.amount for g in user.givings)
+        total_amount = partnership_total + givings_total
+
         user_dict = {
             'title': user.title,
             'firstName': user.firstName,
@@ -97,7 +101,8 @@ def get_form_data():
             'email': user.email,
             'phoneNumber': user.phoneNumber,
             'partnerships': [{'type': p.type, 'amount': p.amount} for p in user.partnership],
-            'givings': [{'type': g.type, 'amount': g.amount} for g in user.givings]
+            'givings': [{'type': g.type, 'amount': g.amount} for g in user.givings],
+            'total': total_amount
         }
         data.append(user_dict)
     return jsonify({'data': data}), 200
