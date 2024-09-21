@@ -4,7 +4,7 @@ from colorama import Fore
 from models.AdminUser import KingAdminUser
 from models.FormData import User
 # from models.records import KingsRecords
-connect(alias='core', host='mongodb://localhost:27017/kingsrecord_db')
+connect(alias='core', host='mongodb+srv://udehdinobi:tOgop2E0oqtxgdAn@kingsrecord.vgiff.mongodb.net/')
 
 class KingsRecordDatabase:
     def reg_admin_user(self, **kwargs):
