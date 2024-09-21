@@ -44,6 +44,8 @@ def login_admin():
     if not email or not password:
         return jsonify({'error': 'Email and password are required'}), 400
     user = storage.get_admin_by_email(email)
+    if user is None:
+        return jsonify({'error': 'User not found'}), 404
     if not user.check_password(password):
         return jsonify({'error': 'Invalid email or password'}), 401
     access_token = create_access_token(identity=str(user.id), expires_delta=timedelta(days=1))

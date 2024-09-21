@@ -2,7 +2,7 @@ from flask_jwt_extended import get_jwt_identity, jwt_required
 from flask import jsonify, request, redirect, abort
 from api.v1.views import app_look
 from database.db import KingsRecordDatabase
-from datetime import datetime, timedelta
+from datetime import datetime
 
 storage = KingsRecordDatabase()
 
@@ -46,8 +46,9 @@ def handle_form_data():
                 existing_partnership = next((p for p in chk_user.partnership if p.type == type_details), None)
                 if existing_partnership:
                     existing_partnership.amount += amount
+                    existing_partnership.updatedAt = datetime.now()
                 else:
-                    chk_user.add_partnership(type_details, amount)
+                    chk_user.add_partnership(type_details, amount, createdAt=datetime.now())
 
         if givings:
             for give in givings:
@@ -57,8 +58,9 @@ def handle_form_data():
                 existing_giving = next((g for g in chk_user.givings if g.type == give_type), None)
                 if existing_giving:
                     existing_giving.amount += gift_amount
+                    existing_giving.updatedAt = datetime.now()
                 else:
-                    chk_user.add_giving(give_type, gift_amount)
+                    chk_user.add_giving(give_type, gift_amount, createdAt=datetime.now())
         chk_user.save()
         return jsonify({'message': 'User data updated successfully'}), 200
     else:
@@ -68,11 +70,11 @@ def handle_form_data():
         if partnerships:
             for partner in partnerships:
                 type_details, amount = partner['type'], partner['amount']
-                new_user.add_partnership(type_details, amount)
+                new_user.add_partnership(type_details, amount, createdAt=datetime.now())
         if givings:
             for give in givings:
                 give_type, give_amount = give['type'], give['amount']
-                new_user.add_giving(give_type, give_amount)
+                new_user.add_giving(give_type, give_amount, createdAt=datetime.now())
         new_user.save()
         return jsonify({'message': 'User data created successfully'}), 201
     

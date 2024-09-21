@@ -44,14 +44,12 @@ class User(mongoengine.Document):
         self.updatedAt = datetime.datetime.now()
         self.save()
 
-    def add_partnership(self, type, amount):
-        self.partnership.append(Partnership(type=type, amount=amount))
-        self.updatedAt = datetime.datetime.now()
+    def add_partnership(self, type, amount, createdAt):
+        self.partnership.append(Partnership(type=type, amount=amount, createdAt=createdAt))
         self.save()
 
-    def add_giving(self, type, amount):
-        self.givings.append(Givings(type=type, amount=amount))
-        self.updatedAt = datetime.datetime.now()
+    def add_giving(self, type, amount, createdAt):
+        self.givings.append(Givings(type=type, amount=amount, createdAt=createdAt))
         self.save()
 
     def __str__(self):
