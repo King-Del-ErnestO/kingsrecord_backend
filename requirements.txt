@@ -5,3 +5,4 @@ MongoEngine==0.24.1
 pymongo==3.12.1
 gunicorn
 Werkzeug<2.1
+colorama<0.4.5
