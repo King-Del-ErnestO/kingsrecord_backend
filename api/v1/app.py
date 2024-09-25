@@ -6,7 +6,7 @@ from flask_jwt_extended import JWTManager
 import os
 
 app = Flask(__name__)
-cors = CORS(app, resources={r"/*": {"origins": "*"}} methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"])
+cors = CORS(app, resources={r"/*": {"origins": "*"}}, methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"])
 jwt = JWTManager(app)
 app.register_blueprint(app_look)
 app.config['JWT_SECRET_KEY'] = os.getenv('JWT_SECRET_KEY', 'secret_key')
