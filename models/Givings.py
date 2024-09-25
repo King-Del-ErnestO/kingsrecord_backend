@@ -12,7 +12,7 @@ class Givings(mongoengine.EmbeddedDocument):
         super().__init__(**kwargs)
         self.offering = kwargs.get('Offering', False)
         self.tithes = kwargs.get('Tithes', False)
-        self.specialSeed = kwargs.get('Special Seeds', False)
+        self.specialSeeds = kwargs.get('Special Seeds', False)
         self.donation = kwargs.get('Donations', False)
         self.amount = kwargs.get('amount', 0)
         self.createdAt = kwargs.get('createdAt', datetime.datetime.now)
