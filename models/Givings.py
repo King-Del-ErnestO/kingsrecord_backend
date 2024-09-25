@@ -10,10 +10,10 @@ class Givings(mongoengine.EmbeddedDocument):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.offering = kwargs.get('offering', False)
-        self.tithes = kwargs.get('tithes', False)
-        self.specialSeed = kwargs.get('specialSeed', False)
-        self.donation = kwargs.get('donation', False)
+        self.offering = kwargs.get('Offering', False)
+        self.tithes = kwargs.get('Tithes', False)
+        self.specialSeed = kwargs.get('Special Seeds', False)
+        self.donation = kwargs.get('Donations', False)
         self.amount = kwargs.get('amount', 0)
         self.createdAt = kwargs.get('createdAt', datetime.datetime.now)
         self.updatedAt = kwargs.get('updatedAt', datetime.datetime.now)

@@ -9,11 +9,11 @@ class Partnership(mongoengine.EmbeddedDocument):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.rhapsodyOfRealities = kwargs.get('rhapsodyOfRealities', False)
-        self.healingStreams = kwargs.get('healingStreams', False)
-        self.campusMinistry = kwargs.get('campusMinistry', False)
-        self.innerCityMission = kwargs.get('innerCityMission', False)
-        self.ministryProgram = kwargs.get('ministryProgram', False)
+        self.rhapsodyOfRealities = kwargs.get('Rhapsody of Realities', False)
+        self.healingStreams = kwargs.get('Healings Streams', False)
+        self.campusMinistry = kwargs.get('Campus Ministry', False)
+        self.innerCityMission = kwargs.get('InnerCity Missions', False)
+        self.ministryProgram = kwargs.get('Ministry Programs', False)
         self.amount = kwargs.get('amount', 0)
         self.createdAt = kwargs.get('createdAt', datetime.datetime.now)
         self.updatedAt = kwargs.get('updatedAt', datetime.datetime.now)
