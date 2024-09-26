@@ -124,9 +124,141 @@ def get_form_data():
             'phoneNumber': user.phoneNumber,
             'partnerships': [{'type': p.type, 'amount': p.amount} for p in user.partnership],
             'givings': [{'type': g.type, 'amount': g.amount} for g in user.givings],
-            'totalPartnership': partnership_total,
-            'totalGivings': givings_total,
+            # 'totalPartnership': partnership_total,
+            # 'totalGivings': givings_total,
             'total': total_amount
         }
         data.append(user_dict)
     return jsonify({'data': data}), 200
+
+@app_look.route('/partnership-yearly/<year>', methods=['GET'])
+def get_total_partnership_yearly(year):
+    """Returns the total partnership for a given year"""
+
+    admin_id = get_jwt_identity()
+    if not admin_id:
+        return jsonify({'error': 'Unauthorized'}), 401
+    
+    users = storage.get_all_users()
+    if not users:
+        return jsonify({'message': 'No form data found'}), 401
+    total_partnership_sum = 0
+    for user in users:
+        try:
+            date_obj = datetime.strptime(user.Date, '%Y-%m-%d')
+        except ValueError:
+            continue
+        if date_obj.year != int(year):
+            continue
+        partnership_total = 0
+        for p in user.partnership:
+            partnership_total += p.amount
+        total_partnership_sum += partnership_total
+
+    return jsonify({
+        'year': year,
+        'total_partnership_sum': total_partnership_sum
+    })
+
+@app_look.route('/givings-yearly/<year>', methods=['GET'])
+def get_total_givings_yearly(year):
+    """Returns the total partnership for a given year"""
+
+    admin_id = get_jwt_identity()
+    if not admin_id:
+        return jsonify({'error': 'Unauthorized'}), 401
+    
+    users = storage.get_all_users()
+    if not users:
+        return jsonify({'message': 'No form data found'}), 401
+    total_giving_sum = 0
+    for user in users:
+        try:
+            date_obj = datetime.strptime(user.Date, '%Y-%m-%d')
+        except ValueError:
+            continue
+        if date_obj.year != int(year):
+            continue
+        givings_total = 0
+        for p in user.givings:
+            givings_total += p.amount
+        total_giving_sum += givings_total
+    return jsonify({
+        'year': year,
+        'total_partnership_sum': total_giving_sum
+    })
+
+@app_look.route('/members', methods=['GET'])
+def get_total_members():
+    """Returns the total number of members"""
+    admin_id = get_jwt_identity()
+    if not admin_id:
+        return jsonify({'error': 'Unauthorized'}), 401
+    
+    users = storage.get_all_users()
+    if not users:
+        return jsonify({'message': 'No form data found'}), 401
+    
+    return jsonify({
+        'total_members': len(users)
+    })
+
+
+@app_look.route('/partnership/<month>/<year>', methods=['GET'])
+def get_total_partnership(month, year):
+    """Returns the total partnership for a given month"""
+
+    admin_id = get_jwt_identity()
+    if not admin_id:
+        return jsonify({'error': 'Unauthorized'}), 401
+    
+    users = storage.get_all_users()
+    if not users:
+        return jsonify({'message': 'No form data found'}), 401
+    total_partnership_sum = 0
+    for user in users:
+        try:
+            date_obj = datetime.strptime(user.Date, '%Y-%m-%d')
+        except ValueError:
+            continue
+        if (month and date_obj.month != int(month)) or (year and date_obj.year != int(year)):
+            continue
+        partnership_total = 0
+        for p in user.partnership:
+            partnership_total += p.amount
+        total_partnership_sum += partnership_total
+    return jsonify({
+        'month': month,
+        'year': year,
+        'total_partnership_sum': total_partnership_sum
+    })
+
+@app_look.route('/givings/<month>/<year>', methods=['GET'])
+def get_total_givings(month, year):
+    """Returns the total givings for a given month"""
+
+    admin_id = get_jwt_identity()
+    if not admin_id:
+        return jsonify({'error': 'Unauthorized'}), 401
+    
+    users = storage.get_all_users()
+    if not users:
+        return jsonify({'message': 'No form data found'}), 401
+    total_giving_sum = 0
+    for user in users:
+        try:
+            date_obj = datetime.strptime(user.Date, '%Y-%m-%d')
+        except ValueError:
+            continue
+        if (month and date_obj.month != int(month)) or (year and date_obj.year != int(year)):
+            continue
+        givings_total = 0
+        for p in user.givings:
+            givings_total += p.amount
+        total_giving_sum += givings_total
+    return jsonify({
+        'month': month,
+        'year': year,
+        'total_giving_sum': total_giving_sum
+    })
+
