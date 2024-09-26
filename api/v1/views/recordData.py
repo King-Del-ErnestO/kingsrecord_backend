@@ -29,7 +29,7 @@ def handle_form_data():
     or not kwargs['email'] or not kwargs['phoneNumber']:
         return jsonify({'error': 'All fields are required'}), 400
     if not partnerships or not givings:
-        return jsonify({'error': 'At least one partnership and one giving must be provided'}), 400
+        return jsonify({'error': 'At least one partnership or one giving must be provided'}), 400
     print( kwargs['email'], kwargs['phoneNumber'], partnerships, givings)
 
     email = kwargs['email']
