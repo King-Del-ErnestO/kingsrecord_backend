@@ -132,6 +132,7 @@ def get_form_data():
     return jsonify({'data': data}), 200
 
 @app_look.route('/partnership-yearly/<year>', methods=['GET'])
+@jwt_required()
 def get_total_partnership_yearly(year):
     """Returns the total partnership for a given year"""
 
@@ -161,6 +162,7 @@ def get_total_partnership_yearly(year):
     })
 
 @app_look.route('/givings-yearly/<year>', methods=['GET'])
+@jwt_required()
 def get_total_givings_yearly(year):
     """Returns the total partnership for a given year"""
 
@@ -189,6 +191,7 @@ def get_total_givings_yearly(year):
     })
 
 @app_look.route('/members', methods=['GET'])
+@jwt_required()
 def get_total_members():
     """Returns the total number of members"""
     admin_id = get_jwt_identity()
@@ -207,6 +210,7 @@ def get_total_members():
 
 
 @app_look.route('/partnership/<month>/<year>', methods=['GET'])
+@jwt_required()
 def get_total_partnership(month, year):
     """Returns the total partnership for a given month"""
 
@@ -236,6 +240,7 @@ def get_total_partnership(month, year):
     })
 
 @app_look.route('/givings/<month>/<year>', methods=['GET'])
+@jwt_required()
 def get_total_givings(month, year):
     """Returns the total givings for a given month"""
 
