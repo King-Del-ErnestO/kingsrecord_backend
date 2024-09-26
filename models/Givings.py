@@ -3,7 +3,7 @@ import datetime
 
 class Givings(mongoengine.EmbeddedDocument):
     """Giving model for a user"""
-    type = mongoengine.StringField(required=True, choices=['Offering', 'Tithes', 'Special Seeds', 'Donation'])
+    type = mongoengine.StringField(required=True, choices=['Offering', 'TIthes', 'Special Seeds', 'Donation'])
     amount = mongoengine.IntField(default=0)
     createdAt = mongoengine.DateTimeField(default=datetime.datetime.now)
     updatedAt = mongoengine.DateTimeField(default=datetime.datetime.now)
