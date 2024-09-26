@@ -194,14 +194,16 @@ def get_total_members():
     admin_id = get_jwt_identity()
     if not admin_id:
         return jsonify({'error': 'Unauthorized'}), 401
-    
-    users = storage.get_all_users()
-    if not users:
-        return jsonify({'message': 'No form data found'}), 401
-    
-    return jsonify({
-        'total_members': len(users)
-    })
+    try:
+        users = storage.get_all_users()
+        if not users:
+            return jsonify({'message': 'No form data found'}), 401
+        
+        return jsonify({
+            'total_members': len(users)
+        })
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
 
 
 @app_look.route('/partnership/<month>/<year>', methods=['GET'])
