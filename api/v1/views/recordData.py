@@ -86,13 +86,28 @@ def get_form_data():
     admin_id = get_jwt_identity()
     if not admin_id:
         return jsonify({'error': 'Unauthorized'}), 401
+    
+    month = request.args.get('month', None)
+    year = request.args.get('year', None)
+
     users = storage.get_all_users()
     if not users:
         return jsonify({'message': 'No form data found'}), 200
     data = []
     for user in users:
-        partnership_total = sum(p.amount for p in user.partnership)
-        givings_total = sum(g.amount for g in user.givings)
+        partnership_total = 0
+        givings_total = 0
+        for p in user.partnership:
+            date_obj = datetime.strptime(user.Date, '%m/%d/%Y')
+            if (not month or date_obj.month == int(month)) and (not year or date_obj.year == int(year)):
+                partnership_total += p.amount
+        
+        for g in user.givings:
+            date_obj = datetime.strptime(user.Date, '%m/%d/%Y')
+            if (not month or date_obj.month == int(month)) and (not year or date_obj.year == int(year)):
+                givings_total += g.amount
+
+            
         total_amount = partnership_total + givings_total
 
         user_dict = {

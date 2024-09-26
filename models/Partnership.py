@@ -10,5 +10,5 @@ class Partnership(mongoengine.EmbeddedDocument):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.amount = kwargs.get('amount', 0)
-        self.createdAt = kwargs.get('createdAt', datetime.datetime.now)
-        self.updatedAt = kwargs.get('updatedAt', datetime.datetime.now)
+        self.createdAt = kwargs.get('createdAt', datetime.datetime.now())
+        self.updatedAt = kwargs.get('updatedAt', datetime.datetime.now())
