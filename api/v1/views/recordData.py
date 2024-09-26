@@ -238,7 +238,6 @@ def get_total_partnership(month, year):
         'year': year,
         'total_partnership_sum': total_partnership_sum
     })
-
 @app_look.route('/givings/<month>/<year>', methods=['GET'])
 @jwt_required()
 def get_total_givings(month, year):
