@@ -100,12 +100,12 @@ def get_form_data():
         partnership_total = 0
         givings_total = 0
         for p in user.partnership:
-            date_obj = datetime.strptime(user.Date, '%m/%d/%Y')
+            date_obj = datetime.strptime(user.Date, '%m-%d-%Y')
             if (not month or date_obj.month == int(month)) and (not year or date_obj.year == int(year)):
                 partnership_total += p.amount
         
         for g in user.givings:
-            date_obj = datetime.strptime(user.Date, '%m/%d/%Y')
+            date_obj = datetime.strptime(user.Date, '%m-%d-%Y')
             if (not month or date_obj.month == int(month)) and (not year or date_obj.year == int(year)):
                 givings_total += g.amount
 
