@@ -94,6 +94,8 @@ def get_form_data():
     if not users:
         return jsonify({'message': 'No form data found'}), 200
     data = []
+    total_partnership_sum = 0
+    total_givings_sum = 0
     for user in users:
         partnership_total = 0
         givings_total = 0
@@ -107,7 +109,8 @@ def get_form_data():
             if (not month or date_obj.month == int(month)) and (not year or date_obj.year == int(year)):
                 givings_total += g.amount
 
-            
+        total_partnership_sum += partnership_total
+        total_givings_sum += givings_total
         total_amount = partnership_total + givings_total
 
         user_dict = {
@@ -119,6 +122,8 @@ def get_form_data():
             'phoneNumber': user.phoneNumber,
             'partnerships': [{'type': p.type, 'amount': p.amount} for p in user.partnership],
             'givings': [{'type': g.type, 'amount': g.amount} for g in user.givings],
+            'totalPartnership': partnership_total,
+            'totalGivings': givings_total,
             'total': total_amount
         }
         data.append(user_dict)
