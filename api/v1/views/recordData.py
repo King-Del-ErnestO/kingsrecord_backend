@@ -39,40 +39,43 @@ def handle_form_data():
     
     chk_user = storage.get_user_by_email(email)
     if chk_user:
-        for partner in partnerships:
-            if 'type' not in partner or 'amount' not in partner:
-                return jsonify({'error': 'Invalid partnership format'}), 400
-            type_details, amount = partner['type'], partner['amount']
-            existing_partnership = next((p for p in chk_user.partnership if p.type == type_details), None)
-            if existing_partnership:
-                existing_partnership.amount += amount
-                existing_partnership.updatedAt = datetime.now()
-            else:
-                chk_user.add_partnership(type_details, amount, createdAt=datetime.now())
+        if partnerships:
+            for partner in partnerships:
+                if 'type' not in partner or 'amount' not in partner:
+                    return jsonify({'error': 'Invalid partnership format'}), 400
+                type_details, amount = partner['type'], partner['amount']
+                existing_partnership = next((p for p in chk_user.partnership if p.type == type_details), None)
+                if existing_partnership:
+                    existing_partnership.amount += amount
+                    existing_partnership.updatedAt = datetime.now()
+                else:
+                    chk_user.add_partnership(type_details, amount, createdAt=datetime.now())
 
-        for give in givings:
-            if 'type' not in give or 'amount' not in give:
-                return jsonify({'error': 'Invalid giving format'}), 400
-            give_type, gift_amount = give['type'], give['amount']
-            existing_giving = next((g for g in chk_user.givings if g.type == give_type), None)
-            if existing_giving:
-                existing_giving.amount += gift_amount
-                existing_giving.updatedAt = datetime.now()
-            else:
-                chk_user.add_giving(give_type, gift_amount, createdAt=datetime.now())
+        if givings:
+            for give in givings:
+                if 'type' not in give or 'amount' not in give:
+                    return jsonify({'error': 'Invalid giving format'}), 400
+                give_type, gift_amount = give['type'], give['amount']
+                existing_giving = next((g for g in chk_user.givings if g.type == give_type), None)
+                if existing_giving:
+                    existing_giving.amount += gift_amount
+                    existing_giving.updatedAt = datetime.now()
+                else:
+                    chk_user.add_giving(give_type, gift_amount, createdAt=datetime.now())
         chk_user.save()
         return jsonify({'message': 'User data updated successfully'}), 200
     else:
         new_user = storage.reg_user(**kwargs)
         if new_user is None:
             return jsonify({'error': 'User registration failed'}), 500
-
-        for partner in partnerships:
-            type_details, amount = partner['type'], partner['amount']
-            new_user.add_partnership(type_details, amount, createdAt=datetime.now())
-        for give in givings:
-            give_type, give_amount = give['type'], give['amount']
-            new_user.add_giving(give_type, give_amount, createdAt=datetime.now())
+        if partnerships:
+            for partner in partnerships:
+                type_details, amount = partner['type'], partner['amount']
+                new_user.add_partnership(type_details, amount, createdAt=datetime.now())
+        if givings:
+            for give in givings:
+                give_type, give_amount = give['type'], give['amount']
+                new_user.add_giving(give_type, give_amount, createdAt=datetime.now())
         new_user.save()
         return jsonify({'message': 'User data created successfully'}), 201
     
