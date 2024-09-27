@@ -20,7 +20,8 @@ def handle_form_data():
         'lastName': data.get('lastName'),
         'Date': data.get('Date'),
         'email': data.get('email'),
-        'phoneNumber': data.get('phoneNumber')
+        'phoneNumber': data.get('phoneNumber'),
+        'admin': admin_id 
     }
     partnerships = data.get('partnerships', [])
     givings = data.get('givings', [])
