@@ -159,7 +159,7 @@ def get_total_partnership_yearly(year):
 
     return jsonify({
         'year': year,
-        'total_partnership_sum': total_partnership_sum
+        'data': total_partnership_sum
     })
 
 @app_look.route('/givings-yearly/<year>', methods=['GET'])
@@ -188,7 +188,7 @@ def get_total_givings_yearly(year):
         total_giving_sum += givings_total
     return jsonify({
         'year': year,
-        'total_partnership_sum': total_giving_sum
+        'data': total_giving_sum
     })
 
 @app_look.route('/members', methods=['GET'])
@@ -204,7 +204,7 @@ def get_total_members():
             return jsonify({'message': 'No form data found'}), 401
         
         return jsonify({
-            'total_members': len(users)
+            'data': len(users)
         })
     except Exception as e:
         return jsonify({'error': str(e)}), 500
@@ -237,7 +237,7 @@ def get_total_partnership(month, year):
     return jsonify({
         'month': month,
         'year': year,
-        'total_partnership_sum': total_partnership_sum
+        'data': total_partnership_sum
     })
 @app_look.route('/givings/<month>/<year>', methods=['GET'])
 @jwt_required()
@@ -266,6 +266,6 @@ def get_total_givings(month, year):
     return jsonify({
         'month': month,
         'year': year,
-        'total_giving_sum': total_giving_sum
+        'data': total_giving_sum
     })
 
