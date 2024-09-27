@@ -64,7 +64,16 @@ class KingsRecordDatabase:
         except Exception as e:
             print(f'{Fore.RED}Error getting user by id: {str(e)}{Fore.RESET}')
             return None
-        
+    def get_admin_users(self, admin_id):
+        """Returns all users"""
+        try:
+            users = User.objects(admin=admin_id)
+            return users
+        except DoesNotExist:
+            return None
+        except Exception as e:
+            print(f'{Fore.RED}Error getting all users: {str(e)}{Fore.RESET}')
+            return None
     def get_admin_by_id(self, user_id):
         """Returns a user by user_id"""
         try:
@@ -86,3 +95,4 @@ class KingsRecordDatabase:
         except Exception as e:
             print(f'{Fore.RED}Error getting all users: {str(e)}{Fore.RESET}')
             return None
+        

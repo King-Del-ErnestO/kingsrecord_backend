@@ -2,6 +2,7 @@ import mongoengine
 import datetime
 from models.Partnership import Partnership
 from models.Givings import Givings
+from models.AdminUser import KingAdminUser
 
 class User(mongoengine.Document):
     title = mongoengine.StringField(max_length=100, required=True)
@@ -12,6 +13,7 @@ class User(mongoengine.Document):
     phoneNumber = mongoengine.StringField(max_length=100, required=True)
     partnership = mongoengine.EmbeddedDocumentListField(Partnership)
     givings = mongoengine.EmbeddedDocumentListField(Givings)
+    admin = mongoengine.ReferenceField(KingAdminUser) 
     createdAt = mongoengine.DateTimeField(default=datetime.datetime.now)
 
 

@@ -90,7 +90,7 @@ def get_form_data():
     month = request.args.get('month', None)
     year = request.args.get('year', None)
 
-    users = storage.get_all_users()
+    users = storage.get_admin_users(admin_id)
     if not users:
         return jsonify({'message': 'No form data found'}), 200
     data = []
@@ -140,7 +140,7 @@ def get_total_partnership_yearly(year):
     if not admin_id:
         return jsonify({'error': 'Unauthorized'}), 401
     
-    users = storage.get_all_users()
+    users = storage.get_admin_users(admin_id)
     if not users:
         return jsonify({'message': 'No form data found'}), 401
     total_partnership_sum = 0
@@ -170,7 +170,7 @@ def get_total_givings_yearly(year):
     if not admin_id:
         return jsonify({'error': 'Unauthorized'}), 401
     
-    users = storage.get_all_users()
+    users = storage.get_admin_users(admin_id)
     if not users:
         return jsonify({'message': 'No form data found'}), 401
     total_giving_sum = 0
@@ -198,7 +198,7 @@ def get_total_members():
     if not admin_id:
         return jsonify({'error': 'Unauthorized'}), 401
     try:
-        users = storage.get_all_users()
+        users = storage.get_admin_users(admin_id)
         if not users:
             return jsonify({'message': 'No form data found'}), 401
         
@@ -218,7 +218,7 @@ def get_total_partnership(month, year):
     if not admin_id:
         return jsonify({'error': 'Unauthorized'}), 401
     
-    users = storage.get_all_users()
+    users = storage.get_admin_users(admin_id)
     if not users:
         return jsonify({'message': 'No form data found'}), 401
     total_partnership_sum = 0
@@ -247,7 +247,7 @@ def get_total_givings(month, year):
     if not admin_id:
         return jsonify({'error': 'Unauthorized'}), 401
     
-    users = storage.get_all_users()
+    users = storage.get_admin_users(admin_id)
     if not users:
         return jsonify({'message': 'No form data found'}), 401
     total_giving_sum = 0
