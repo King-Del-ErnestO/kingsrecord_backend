@@ -6,10 +6,11 @@ from datetime import datetime
 
 storage = KingsRecordDatabase()
 
-@app_look.route('/form-data', methods=['PUT'])
+
+@app_look.route('/partnership-register', methods=['POST'])
 @jwt_required()
-def handle_form_data():
-    """Handles the form data"""
+def add_partnership():
+    """Registers a new partnership"""
     admin_id = get_jwt_identity()
     if not admin_id:
         return jsonify({'error': 'Unauthorized'}), 401
@@ -24,14 +25,12 @@ def handle_form_data():
         'admin': admin_id 
     }
     partnerships = data.get('partnerships', [])
-    givings = data.get('givings', [])
 
-    if not kwargs['title'] or not kwargs['firstName'] or not kwargs['lastName'] or not kwargs['Date'] \
+    if not kwargs['firstName'] or not kwargs['lastName'] or not kwargs['Date'] \
     or not kwargs['email'] or not kwargs['phoneNumber']:
         return jsonify({'error': 'All fields are required'}), 400
-    if not partnerships or not givings:
-        return jsonify({'error': 'At least one partnership and one giving must be provided'}), 400
-    print( kwargs['email'], kwargs['phoneNumber'], partnerships, givings)
+    if not partnerships :
+        return jsonify({'error': 'Partnership is required'}), 400
 
     email = kwargs['email']
     if not email:
@@ -50,35 +49,93 @@ def handle_form_data():
                     existing_partnership.updatedAt = datetime.now()
                 else:
                     chk_user.add_partnership(type_details, amount, createdAt=datetime.now())
-
-        if givings:
-            for give in givings:
-                if 'type' not in give or 'amount' not in give:
-                    return jsonify({'error': 'Invalid giving format'}), 400
-                give_type, gift_amount = give['type'], give['amount']
-                existing_giving = next((g for g in chk_user.givings if g.type == give_type), None)
-                if existing_giving:
-                    existing_giving.amount += gift_amount
-                    existing_giving.updatedAt = datetime.now()
-                else:
-                    chk_user.add_giving(give_type, gift_amount, createdAt=datetime.now())
         chk_user.save()
-        return jsonify({'message': 'User data updated successfully'}), 200
     else:
-        new_user = storage.reg_user(**kwargs)
-        if new_user is None:
-            return jsonify({'error': 'User registration failed'}), 500
-        if partnerships:
-            for partner in partnerships:
-                type_details, amount = partner['type'], partner['amount']
-                new_user.add_partnership(type_details, amount, createdAt=datetime.now())
-        if givings:
-            for give in givings:
-                give_type, give_amount = give['type'], give['amount']
-                new_user.add_giving(give_type, give_amount, createdAt=datetime.now())
-        new_user.save()
-        return jsonify({'message': 'User data created successfully'}), 201
+        return jsonify({'error': 'Member not found in database'}), 404
+        # new_user = storage.reg_user(**kwargs)
+        # if new_user is None:
+        #     return jsonify({'error': 'User registration failed'}), 500
+        # if partnerships:
+        #     for partner in partnerships:
+        #         type_details, amount = partner['type'], partner['amount']
+        #         new_user.add_partnership(type_details, amount, createdAt=datetime.now())
+
+@app_look.route('/givings-register', methods=['POST'])
+@jwt_required()
+def add_givings():
+    """Registers a new partnership"""
+    admin_id = get_jwt_identity()
+    if not admin_id:
+        return jsonify({'error': 'Unauthorized'}), 401
+    data = request.json
+    kwargs = {
+        'title': data.get('title'),
+        'firstName': data.get('firstName'),
+        'lastName': data.get('lastName'),
+        'Date': data.get('Date'),
+        'email': data.get('email'),
+        'phoneNumber': data.get('phoneNumber'),
+        'admin': admin_id 
+    }
+    givings = data.get('givings', [])
+
+    if not kwargs['firstName'] or not kwargs['lastName'] or not kwargs['Date'] \
+    or not kwargs['email'] or not kwargs['phoneNumber']:
+        return jsonify({'error': 'All fields are required'}), 400
+    if not givings :
+        return jsonify({'error': 'Partnership is required'}), 400
+
+    email = kwargs['email']
+    if not email:
+        return jsonify({'error': 'Email is required'}), 400
     
+    chk_user = storage.get_user_by_email(email)
+    if chk_user:
+        if givings:
+            for partner in givings:
+                if 'type' not in partner or 'amount' not in partner:
+                    return jsonify({'error': 'Invalid partnership format'}), 400
+                type_details, amount = partner['type'], partner['amount']
+                existing_givings = next((p for p in chk_user.givings if p.type == type_details), None)
+                if existing_givings:
+                    existing_givings.amount += amount
+                    existing_givings.updatedAt = datetime.now()
+                else:
+                    chk_user.add_giving(type_details, amount, createdAt=datetime.now())
+        chk_user.save()
+    else:
+        return jsonify({'error': 'Member not found in database'}), 404
+
+@app_look.route('/spreadsheet', methods=['POST'])
+@jwt_required()
+def add_member():
+    """Registers a new user"""
+    admin_id = get_jwt_identity()
+    if not admin_id:
+        return jsonify({'error': 'Unauthorized'}), 401
+    data = request.json
+    kwargs = {
+        'title': data.get('title'),
+        'firstName': data.get('firstName'),
+        'lastName': data.get('lastName'),
+        'email': data.get('email'),
+        'birthDate': data.get('birthDate'),
+        'phoneNumber': data.get('phoneNumber'),
+        'church': data.get('church'),
+        'cell': data.get('cell'),
+        'admin': admin_id 
+    }
+    if  not kwargs['firstName'] or not kwargs['lastName'] or not kwargs['birthDate']  or not kwargs['email']\
+    or not kwargs['phoneNumber']:
+        return jsonify({'error': 'Required Fields are missing'}), 400
+    user = storage.get_user_by_email(kwargs['email'])
+    if user:
+        return jsonify({'error': 'User is already in the database'}), 400
+    new_user = storage.reg_user(**kwargs)
+    if new_user is None:
+        return jsonify({'error': 'User registration failed'}), 500
+    return jsonify({'message': 'This member is added to the database'}), 201
+
 
 @app_look.route('/spreadsheet', methods=['GET'])
 @jwt_required()

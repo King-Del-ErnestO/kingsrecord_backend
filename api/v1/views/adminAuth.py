@@ -49,4 +49,6 @@ def login_admin():
     if not user.check_password(password):
         return jsonify({'error': 'Invalid email or password'}), 401
     access_token = create_access_token(identity=str(user.id), expires_delta=timedelta(days=1))
-    return jsonify({'message': 'Logged in successfully', 'access_token': access_token}), 200
+    return jsonify({ 'firstName': user.firstName,
+                    'message': 'Logged in successfully'
+                    , 'access_token': access_token}), 200
