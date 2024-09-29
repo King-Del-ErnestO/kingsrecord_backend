@@ -148,10 +148,9 @@ def add_member():
         or not kwargs['phoneNumber']:
             return jsonify({'error': 'Required Fields are missing'}), 400
         user = storage.get_user_by_email(kwargs['email'])
-        names = storage.get_names(kwargs['firstName'], kwargs['lastName'])
+        # names = storage.get_names(kwargs['firstName'], kwargs['lastName'])
         if user:
-            if names:
-                return jsonify({'error': 'Member is already stored in the database'}), 400
+            return jsonify({'error': 'Member is already stored in the database'}), 400
         new_user = storage.reg_user(**kwargs)
         if new_user is None:
             return jsonify({'error': 'Member registration failed'}), 500
@@ -166,8 +165,7 @@ def add_member():
                         existing_partnership.updatedAt = datetime.now()
                 else:
                     user.add_partnership(type_details, amount, Date, createdAt=datetime.now())
-                user.save()
-                return jsonify({'message': 'Partnership added'}), 201
+            user.save()
         if givings:
             for partner in givings:
                 if 'type' not in partner or 'amount' not in partner:
@@ -179,8 +177,7 @@ def add_member():
                     existing_givings.updatedAt = datetime.now()
                 else:
                     user.add_giving(type_details, amount, Date, createdAt=datetime.now())
-                user.save()
-                return jsonify({'message': 'Givings'}), 201
+            user.save()
         return jsonify({'message': 'This member is added to the database'}), 201
     except Exception as e:
         return jsonify({'error': str(e)}), 500
