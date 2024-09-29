@@ -150,31 +150,15 @@ def add_member():
             return jsonify({'error': 'Member is already stored in the database'}), 400
         new_user = storage.reg_user(**kwargs)
         if new_user is None:
-            return jsonify({'error': 'Member registration failed'}), 500
+            return jsonify({'error': 'User registration failed'}), 500
         if partnerships:
             for partner in partnerships:
-                if 'type' not in partner or 'amount' not in partner:
-                    return jsonify({'error': 'Invalid partnership format'}), 400
                 type_details, amount = partner['type'], partner['amount']
-                existing_partnership = next((p for p in user.partnership if p.type == type_details), None)
-                if existing_partnership:
-                        existing_partnership.amount += amount
-                        existing_partnership.updatedAt = datetime.now()
-                else:
-                    user.add_partnership(type_details, amount, Date, createdAt=datetime.now())
-        new_user.save()
-
+                new_user.add_partnership(type_details, amount, Date, createdAt=datetime.now())
         if givings:
-            for partner in givings:
-                if 'type' not in partner or 'amount' not in partner:
-                    return jsonify({'error': 'Invalid partnership format'}), 400
-                type_details, amount = partner['type'], partner['amount']
-                existing_givings = next((p for p in user.givings if p.type == type_details), None)
-                if existing_givings:
-                    existing_givings.amount += amount
-                    existing_givings.updatedAt = datetime.now()
-                else:
-                    user.add_giving(type_details, amount, Date, createdAt=datetime.now())
+            for give in givings:
+                give_type, give_amount = give['type'], give['amount']
+                new_user.add_giving(give_type, give_amount, Date, createdAt=datetime.now())
         new_user.save()
         return jsonify({'message': 'This member is added to the database'}), 201
     except Exception as e:
