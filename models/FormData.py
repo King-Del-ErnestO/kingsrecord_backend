@@ -12,8 +12,8 @@ class User(mongoengine.Document):
     email = mongoengine.StringField(max_length=100, required=True)
     phoneNumber = mongoengine.StringField(max_length=100, required=False)
     birthDate = mongoengine.StringField(required=True)
-    partnership = mongoengine.EmbeddedDocumentListField(Partnership)
-    givings = mongoengine.EmbeddedDocumentListField(Givings)
+    partnership = mongoengine.EmbeddedDocumentListField(Partnership, default=[])
+    givings = mongoengine.EmbeddedDocumentListField(Givings, default=[])
     admin = mongoengine.ReferenceField(KingAdminUser) 
     createdAt = mongoengine.DateTimeField(default=datetime.datetime.now)
 
@@ -31,9 +31,9 @@ class User(mongoengine.Document):
         # self.Date = kwargs.get('Date', None)
         self.email = kwargs.get('email', None)
         self.phoneNumber = kwargs.get('phoneNumber', None)
-        self.partnership = kwargs.get('partnership', None)
+        self.partnership = kwargs.get('partnership', [])
         self.birthDate = kwargs.get('birthDate', None)
-        self.givings = kwargs.get('givings', None)
+        self.givings = kwargs.get('givings', [])
         self.createdAt = kwargs.get('createdAt', datetime.datetime.now)
 
     def update(self, **kwargs):
