@@ -25,8 +25,9 @@ def add_partnership():
             'admin': admin_id 
         }
         partnerships = data.get('partnerships', [])
+        Date = data.get('Date')
 
-        if not kwargs['firstName'] or not kwargs['lastName'] \
+        if not kwargs['firstName'] or not kwargs['lastName'] or not Date \
         or not kwargs['email'] or not kwargs['phoneNumber']:
             return jsonify({'error': 'All fields are required'}), 400
         if not partnerships :
@@ -42,7 +43,7 @@ def add_partnership():
                 for partner in partnerships:
                     if 'type' not in partner or 'amount' not in partner:
                         return jsonify({'error': 'Invalid partnership format'}), 400
-                    type_details, amount, Date = partner['type'], partner['amount'], partner['Date']
+                    type_details, amount = partner['type'], partner['amount']
                     existing_partnership = next((p for p in chk_user.partnership if p.type == type_details), None)
                     if existing_partnership:
                         existing_partnership.amount += amount
@@ -74,8 +75,9 @@ def add_givings():
             'admin': admin_id 
         }
         givings = data.get('givings', [])
+        Date = data.get('Date')
 
-        if not kwargs['firstName'] or not kwargs['lastName'] \
+        if not kwargs['firstName'] or not kwargs['lastName'] or not Date \
         or not kwargs['email'] or not kwargs['phoneNumber']:
             return jsonify({'error': 'All fields are required'}), 400
         if not givings :
@@ -91,7 +93,7 @@ def add_givings():
                 for partner in givings:
                     if 'type' not in partner or 'amount' not in partner:
                         return jsonify({'error': 'Invalid partnership format'}), 400
-                    type_details, amount, Date = partner['type'], partner['amount'], partner['Date']
+                    type_details, amount = partner['type'], partner['amount']
                     existing_givings = next((p for p in chk_user.givings if p.type == type_details), None)
                     if existing_givings:
                         existing_givings.amount += amount
