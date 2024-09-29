@@ -12,8 +12,6 @@ class User(mongoengine.Document):
     email = mongoengine.StringField(max_length=100, required=True)
     phoneNumber = mongoengine.StringField(max_length=100, required=False)
     birthDate = mongoengine.StringField(required=True)
-    church = mongoengine.StringField(required=False)
-    cell = mongoengine.StringField(required=False)
     partnership = mongoengine.EmbeddedDocumentListField(Partnership)
     givings = mongoengine.EmbeddedDocumentListField(Givings)
     admin = mongoengine.ReferenceField(KingAdminUser) 
@@ -35,8 +33,6 @@ class User(mongoengine.Document):
         self.phoneNumber = kwargs.get('phoneNumber', None)
         self.partnership = kwargs.get('partnership', None)
         self.birthDate = kwargs.get('birthDate', None)
-        self.church = kwargs.get('church', None)
-        self.cell = kwargs.get('cell', None)
         self.givings = kwargs.get('givings', None)
         self.createdAt = kwargs.get('createdAt', datetime.datetime.now)
 

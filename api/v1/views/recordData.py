@@ -138,19 +138,49 @@ def add_member():
         'email': data.get('email'),
         'birthDate': data.get('birthDate'),
         'phoneNumber': data.get('phoneNumber'),
-        'church': data.get('church'),
-        'cell': data.get('cell'),
         'admin': admin_id 
     }
+    partnerships = data.get('partnerships', [])
+    givings = data.get('givings', [])
+    Date = data.get('Date')
+
     if  not kwargs['firstName'] or not kwargs['lastName'] or not kwargs['birthDate']  or not kwargs['email']\
     or not kwargs['phoneNumber']:
         return jsonify({'error': 'Required Fields are missing'}), 400
     user = storage.get_user_by_email(kwargs['email'])
+    names = storage.get_names(kwargs['firstName'], kwargs['lastName'])
     if user:
-        return jsonify({'error': 'Member is already stored in the database'}), 400
+        if names:
+            return jsonify({'error': 'Member is already stored in the database'}), 400
     new_user = storage.reg_user(**kwargs)
     if new_user is None:
-        return jsonify({'error': 'User registration failed'}), 500
+        return jsonify({'error': 'Member registration failed'}), 500
+    if partnerships:
+        for partner in partnerships:
+            if 'type' not in partner or 'amount' not in partner:
+                return jsonify({'error': 'Invalid partnership format'}), 400
+            type_details, amount = partner['type'], partner['amount']
+            existing_partnership = next((p for p in user.partnership if p.type == type_details), None)
+            if existing_partnership:
+                    existing_partnership.amount += amount
+                    existing_partnership.updatedAt = datetime.now()
+            else:
+                user.add_partnership(type_details, amount, Date, createdAt=datetime.now())
+            user.save()
+            return jsonify({'message': 'Partnership added'}), 201
+    if givings:
+        for partner in givings:
+            if 'type' not in partner or 'amount' not in partner:
+                return jsonify({'error': 'Invalid partnership format'}), 400
+            type_details, amount = partner['type'], partner['amount']
+            existing_givings = next((p for p in user.givings if p.type == type_details), None)
+            if existing_givings:
+                existing_givings.amount += amount
+                existing_givings.updatedAt = datetime.now()
+            else:
+                user.add_giving(type_details, amount, Date, createdAt=datetime.now())
+            user.save()
+            return jsonify({'message': 'Givings'}), 201
     return jsonify({'message': 'This member is added to the database'}), 201
 
 @app_look.route('/verify-member', methods=['GET'])

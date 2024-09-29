@@ -5,7 +5,7 @@ class Givings(mongoengine.EmbeddedDocument):
     """Giving model for a user"""
     type = mongoengine.StringField(required=True, choices=['Offering', 'Tithes', 'Special Seeds', 'Donation'])
     amount = mongoengine.IntField(default=0)
-    Date = mongoengine.StringField(required=True)
+    Date = mongoengine.StringField(required=False)
     createdAt = mongoengine.DateTimeField(default=datetime.datetime.now)
     updatedAt = mongoengine.DateTimeField(default=datetime.datetime.now)
 

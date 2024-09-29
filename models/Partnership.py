@@ -4,7 +4,7 @@ import datetime
 class Partnership(mongoengine.EmbeddedDocument):
     type = mongoengine.StringField(required=True, choices=['Rhapsody of Realities', 'Healings Streams', 'Campus Ministry', 'InnerCity Missions', 'Ministry Programs'])
     amount = mongoengine.IntField(default=0)
-    Date = mongoengine.StringField(required=True)
+    Date = mongoengine.StringField(required=False)
     createdAt = mongoengine.DateTimeField(default=datetime.datetime.now)
     updatedAt = mongoengine.DateTimeField(default=datetime.datetime.now)
 
