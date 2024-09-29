@@ -240,12 +240,6 @@ def get_total_givings_yearly(year):
         return jsonify({'message': 'No form data found'}), 401
     total_giving_sum = 0
     for user in users:
-        try:
-            date_obj = datetime.strptime(user.Date, '%Y-%m-%d')
-        except ValueError:
-            continue
-        if date_obj.year != int(year):
-            continue
         givings_total = 0
         for p in user.givings:
             try:
