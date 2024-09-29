@@ -8,7 +8,7 @@ class User(mongoengine.Document):
     title = mongoengine.StringField(max_length=100, required=False)
     firstName = mongoengine.StringField(max_length=100, required=True)
     lastName = mongoengine.StringField(max_length=100, required=True)
-    Date = mongoengine.StringField(required=False)
+    Date = mongoengine.StringField(default=datetime.datetime.now().strftime('%Y-%m-%d'))
     email = mongoengine.StringField(max_length=100, required=True)
     phoneNumber = mongoengine.StringField(max_length=100, required=False)
     birthDate = mongoengine.StringField(required=True)
