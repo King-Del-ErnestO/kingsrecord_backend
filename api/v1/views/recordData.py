@@ -106,7 +106,7 @@ def add_givings():
     else:
         return jsonify({'error': 'Member not found in database'}), 404
 
-@app_look.route('/spreadsheet', methods=['POST'])
+@app_look.route('/add-member', methods=['POST'])
 @jwt_required()
 def add_member():
     """Registers a new user"""
