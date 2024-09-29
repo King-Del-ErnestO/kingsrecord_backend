@@ -162,7 +162,7 @@ def add_member():
                         existing_partnership.updatedAt = datetime.now()
                 else:
                     user.add_partnership(type_details, amount, Date, createdAt=datetime.now())
-        user.save()
+        new_user.save()
 
         if givings:
             for partner in givings:
@@ -175,7 +175,7 @@ def add_member():
                     existing_givings.updatedAt = datetime.now()
                 else:
                     user.add_giving(type_details, amount, Date, createdAt=datetime.now())
-        user.save()
+        new_user.save()
         return jsonify({'message': 'This member is added to the database'}), 201
     except Exception as e:
         return jsonify({'error': str(e)}), 500
