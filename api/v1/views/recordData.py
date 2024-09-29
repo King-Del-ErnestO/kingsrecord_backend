@@ -184,7 +184,6 @@ def get_form_data():
             'title': user.title,
             'firstName': user.firstName,
             'lastName': user.lastName,
-            'Date': user.Date,
             'email': user.email,
             'phoneNumber': user.phoneNumber,
             'partnerships': [{'type': p.type, 'amount': p.amount, 'Date': p.Date} for p in user.partnership],
