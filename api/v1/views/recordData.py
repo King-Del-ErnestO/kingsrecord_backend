@@ -154,10 +154,14 @@ def add_member():
         if partnerships:
             for partner in partnerships:
                 type_details, amount = partner['type'], partner['amount']
+                if not type_details or not amount:
+                    return jsonify({'error': 'Invalid partnership format'}), 400
                 new_user.add_partnership(type_details, amount, Date, createdAt=datetime.now())
         if givings:
             for give in givings:
                 give_type, give_amount = give['type'], give['amount']
+                if not give_type or not give_amount:
+                    return jsonify({'error': 'Invalid giving format'}), 400
                 new_user.add_giving(give_type, give_amount, Date, createdAt=datetime.now())
         new_user.save()
         return jsonify({'message': 'This member is added to the database'}), 201
