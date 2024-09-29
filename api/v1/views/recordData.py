@@ -148,20 +148,28 @@ def add_member():
         # names = storage.get_names(kwargs['firstName'], kwargs['lastName'])
         if user:
             return jsonify({'error': 'Member is already stored in the database'}), 400
+        if givings:
+            for give in givings:
+                give_type = give['type']
+                give_amount = give['amount']
+                if not give_type or not give_amount:
+                    return jsonify({'error': 'Invalid giving format: "type" and "amount" are required'}), 400
+                
+        if partnerships:
+            for partner in partnerships:
+                type_details, amount = partner['type'], partner['amount']
+                if not type_details or not amount:
+                    return jsonify({'error': 'Invalid partnership format: "type" and "amount" are required'}), 400
         new_user = storage.reg_user(**kwargs)
         if new_user is None:
             return jsonify({'error': 'User registration failed'}), 500
         if partnerships:
             for partner in partnerships:
                 type_details, amount = partner['type'], partner['amount']
-                if not type_details or not amount:
-                    return jsonify({'error': 'Invalid partnership format'}), 400
                 new_user.add_partnership(type_details, amount, Date, createdAt=datetime.now())
         if givings:
             for give in givings:
                 give_type, give_amount = give['type'], give['amount']
-                if not give_type or not give_amount:
-                    return jsonify({'error': 'Invalid giving format'}), 400
                 new_user.add_giving(give_type, give_amount, Date, createdAt=datetime.now())
         new_user.save()
         return jsonify({'message': 'This member is added to the database'}), 201
