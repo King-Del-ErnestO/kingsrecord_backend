@@ -127,9 +127,6 @@ def add_member():
     if not admin_id:
         return jsonify({'error': 'Unauthorized'}), 401
     try:
-        users = storage.get_admin_users(admin_id)
-        if not users:
-            return jsonify({'message': 'admin cant register member'}), 400
         data = request.json
         kwargs = {
             'title': data.get('title'),
@@ -165,7 +162,8 @@ def add_member():
                         existing_partnership.updatedAt = datetime.now()
                 else:
                     user.add_partnership(type_details, amount, Date, createdAt=datetime.now())
-            user.save()
+        user.save()
+
         if givings:
             for partner in givings:
                 if 'type' not in partner or 'amount' not in partner:
@@ -177,7 +175,7 @@ def add_member():
                     existing_givings.updatedAt = datetime.now()
                 else:
                     user.add_giving(type_details, amount, Date, createdAt=datetime.now())
-            user.save()
+        user.save()
         return jsonify({'message': 'This member is added to the database'}), 201
     except Exception as e:
         return jsonify({'error': str(e)}), 500
