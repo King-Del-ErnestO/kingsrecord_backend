@@ -51,6 +51,7 @@ def add_partnership():
                     else:
                         chk_user.add_partnership(type_details, amount, createdAt=datetime.now())
             chk_user.save()
+            return jsonify({'message': 'Partnership added successfully'}), 201
         else:
             return jsonify({'error': 'Member not found in database'}), 404
     except Exception as e:
@@ -100,6 +101,7 @@ def add_givings():
                     else:
                         chk_user.add_giving(type_details, amount, createdAt=datetime.now())
             chk_user.save()
+            return jsonify({'message': 'Givings added successfully'}), 201
         else:
             return jsonify({'error': 'Member not found in database'}), 404
     except Exception as e:
