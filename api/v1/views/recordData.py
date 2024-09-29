@@ -14,6 +14,10 @@ def add_partnership():
     admin_id = get_jwt_identity()
     if not admin_id:
         return jsonify({'error': 'Unauthorized'}), 401
+    
+    users = storage.get_admin_users(admin_id)
+    if not users:
+        return jsonify({'message': 'member not registered under admin'}), 400
     try:
         data = request.json
         kwargs = {
@@ -64,6 +68,10 @@ def add_givings():
     admin_id = get_jwt_identity()
     if not admin_id:
         return jsonify({'error': 'Unauthorized'}), 401
+    
+    users = storage.get_admin_users(admin_id)
+    if not users:
+        return jsonify({'message': 'member not registered under admin'}), 400
     try:
         data = request.json
         kwargs = {
@@ -114,6 +122,10 @@ def add_member():
     admin_id = get_jwt_identity()
     if not admin_id:
         return jsonify({'error': 'Unauthorized'}), 401
+    
+    users = storage.get_admin_users(admin_id)
+    if not users:
+        return jsonify({'message': 'admin cant register member'}), 400
     data = request.json
     kwargs = {
         'title': data.get('title'),
@@ -131,7 +143,7 @@ def add_member():
         return jsonify({'error': 'Required Fields are missing'}), 400
     user = storage.get_user_by_email(kwargs['email'])
     if user:
-        return jsonify({'error': 'User is already in the database'}), 400
+        return jsonify({'error': 'Member is already stored in the database'}), 400
     new_user = storage.reg_user(**kwargs)
     if new_user is None:
         return jsonify({'error': 'User registration failed'}), 500
