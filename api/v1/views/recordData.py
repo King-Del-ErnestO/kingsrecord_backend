@@ -40,7 +40,9 @@ def add_partnership():
         email = kwargs['email']
         if not email:
             return jsonify({'error': 'Email is required'}), 400
-        
+        check_name = storage.get_names(kwargs['firstName'], kwargs['lastName'])
+        if not check_name:
+            return jsonify({'error': 'First name or last name dosent match on the database'}), 404
         chk_user = storage.get_user_by_email(email)
         if chk_user:
             if partnerships:
@@ -94,7 +96,9 @@ def add_givings():
         email = kwargs['email']
         if not email:
             return jsonify({'error': 'Email is required'}), 400
-        
+        check_name = storage.get_names(kwargs['firstName'], kwargs['lastName'])
+        if not check_name:
+            return jsonify({'error': 'First name or last name dosent match on the database'}), 404
         chk_user = storage.get_user_by_email(email)
         if chk_user:
             if givings:
@@ -149,6 +153,33 @@ def add_member():
         return jsonify({'error': 'User registration failed'}), 500
     return jsonify({'message': 'This member is added to the database'}), 201
 
+@app_look.route('/verify-member', methods=['GET'])
+@jwt_required()
+def get_member():
+    """Returns a member by email"""
+    admin_id = get_jwt_identity()
+    if not admin_id:
+        return jsonify({'error': 'Unauthorized'}), 401
+    
+    users = storage.get_admin_users(admin_id)
+    if not users:
+        return jsonify({'message': 'admin cant register member'}), 400
+    data = request.json
+    email = data.get('email')
+    if not email:
+        return jsonify({'error': 'Email is required'}), 400
+    user = storage.get_user_by_email(email)
+    if not user:
+        return jsonify({'error': 'Member not found in database'}), 404
+    user_data = {
+        'title': user.title,
+        'firstName': user.firstName,
+        'lastName': user.lastName,
+        'email': user.email,
+        'phoneNumber': user.phoneNumber,
+    }
+    return jsonify({'data': user_data}), 201
+
 
 @app_look.route('/spreadsheet', methods=['GET'])
 @jwt_required()
@@ -200,8 +231,6 @@ def get_form_data():
             'phoneNumber': user.phoneNumber,
             'partnerships': [{'type': p.type, 'amount': p.amount, 'Date': p.Date} for p in user.partnership],
             'givings': [{'type': g.type, 'amount': g.amount, 'Date': g.Date} for g in user.givings],
-            # 'totalPartnership': partnership_total,
-            # 'totalGivings': givings_total,
             'total': total_amount
         }
         data.append(user_dict)
