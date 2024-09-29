@@ -145,9 +145,10 @@ def add_member():
         or not kwargs['phoneNumber']:
             return jsonify({'error': 'Required Fields are missing'}), 400
         user = storage.get_user_by_email(kwargs['email'])
-        # names = storage.get_names(kwargs['firstName'], kwargs['lastName'])
+        names = storage.get_names(kwargs['firstName'], kwargs['lastName'])
         if user:
-            return jsonify({'error': 'Member is already stored in the database'}), 400
+            if names:
+                return jsonify({'error': 'Member with same name already exists'}), 400
         new_user = storage.reg_user(**kwargs)
         if new_user is None:
             return jsonify({'error': 'User registration failed'}), 500
