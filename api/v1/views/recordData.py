@@ -14,51 +14,47 @@ def add_partnership():
     admin_id = get_jwt_identity()
     if not admin_id:
         return jsonify({'error': 'Unauthorized'}), 401
-    data = request.json
-    kwargs = {
-        'title': data.get('title'),
-        'firstName': data.get('firstName'),
-        'lastName': data.get('lastName'),
-        'Date': data.get('Date'),
-        'email': data.get('email'),
-        'phoneNumber': data.get('phoneNumber'),
-        'admin': admin_id 
-    }
-    partnerships = data.get('partnerships', [])
+    try:
+        data = request.json
+        kwargs = {
+            'title': data.get('title'),
+            'firstName': data.get('firstName'),
+            'lastName': data.get('lastName'),
+            'Date': data.get('Date'),
+            'email': data.get('email'),
+            'phoneNumber': data.get('phoneNumber'),
+            'admin': admin_id 
+        }
+        partnerships = data.get('partnerships', [])
 
-    if not kwargs['firstName'] or not kwargs['lastName'] or not kwargs['Date'] \
-    or not kwargs['email'] or not kwargs['phoneNumber']:
-        return jsonify({'error': 'All fields are required'}), 400
-    if not partnerships :
-        return jsonify({'error': 'Partnership is required'}), 400
+        if not kwargs['firstName'] or not kwargs['lastName'] or not kwargs['Date'] \
+        or not kwargs['email'] or not kwargs['phoneNumber']:
+            return jsonify({'error': 'All fields are required'}), 400
+        if not partnerships :
+            return jsonify({'error': 'Partnership is required'}), 400
 
-    email = kwargs['email']
-    if not email:
-        return jsonify({'error': 'Email is required'}), 400
-    
-    chk_user = storage.get_user_by_email(email)
-    if chk_user:
-        if partnerships:
-            for partner in partnerships:
-                if 'type' not in partner or 'amount' not in partner:
-                    return jsonify({'error': 'Invalid partnership format'}), 400
-                type_details, amount = partner['type'], partner['amount']
-                existing_partnership = next((p for p in chk_user.partnership if p.type == type_details), None)
-                if existing_partnership:
-                    existing_partnership.amount += amount
-                    existing_partnership.updatedAt = datetime.now()
-                else:
-                    chk_user.add_partnership(type_details, amount, createdAt=datetime.now())
-        chk_user.save()
-    else:
-        return jsonify({'error': 'Member not found in database'}), 404
-        # new_user = storage.reg_user(**kwargs)
-        # if new_user is None:
-        #     return jsonify({'error': 'User registration failed'}), 500
-        # if partnerships:
-        #     for partner in partnerships:
-        #         type_details, amount = partner['type'], partner['amount']
-        #         new_user.add_partnership(type_details, amount, createdAt=datetime.now())
+        email = kwargs['email']
+        if not email:
+            return jsonify({'error': 'Email is required'}), 400
+        
+        chk_user = storage.get_user_by_email(email)
+        if chk_user:
+            if partnerships:
+                for partner in partnerships:
+                    if 'type' not in partner or 'amount' not in partner:
+                        return jsonify({'error': 'Invalid partnership format'}), 400
+                    type_details, amount = partner['type'], partner['amount']
+                    existing_partnership = next((p for p in chk_user.partnership if p.type == type_details), None)
+                    if existing_partnership:
+                        existing_partnership.amount += amount
+                        existing_partnership.updatedAt = datetime.now()
+                    else:
+                        chk_user.add_partnership(type_details, amount, createdAt=datetime.now())
+            chk_user.save()
+        else:
+            return jsonify({'error': 'Member not found in database'}), 404
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
 
 @app_look.route('/givings-register', methods=['POST'])
 @jwt_required()
@@ -67,44 +63,47 @@ def add_givings():
     admin_id = get_jwt_identity()
     if not admin_id:
         return jsonify({'error': 'Unauthorized'}), 401
-    data = request.json
-    kwargs = {
-        'title': data.get('title'),
-        'firstName': data.get('firstName'),
-        'lastName': data.get('lastName'),
-        'Date': data.get('Date'),
-        'email': data.get('email'),
-        'phoneNumber': data.get('phoneNumber'),
-        'admin': admin_id 
-    }
-    givings = data.get('givings', [])
+    try:
+        data = request.json
+        kwargs = {
+            'title': data.get('title'),
+            'firstName': data.get('firstName'),
+            'lastName': data.get('lastName'),
+            'Date': data.get('Date'),
+            'email': data.get('email'),
+            'phoneNumber': data.get('phoneNumber'),
+            'admin': admin_id 
+        }
+        givings = data.get('givings', [])
 
-    if not kwargs['firstName'] or not kwargs['lastName'] or not kwargs['Date'] \
-    or not kwargs['email'] or not kwargs['phoneNumber']:
-        return jsonify({'error': 'All fields are required'}), 400
-    if not givings :
-        return jsonify({'error': 'Partnership is required'}), 400
+        if not kwargs['firstName'] or not kwargs['lastName'] or not kwargs['Date'] \
+        or not kwargs['email'] or not kwargs['phoneNumber']:
+            return jsonify({'error': 'All fields are required'}), 400
+        if not givings :
+            return jsonify({'error': 'Partnership is required'}), 400
 
-    email = kwargs['email']
-    if not email:
-        return jsonify({'error': 'Email is required'}), 400
-    
-    chk_user = storage.get_user_by_email(email)
-    if chk_user:
-        if givings:
-            for partner in givings:
-                if 'type' not in partner or 'amount' not in partner:
-                    return jsonify({'error': 'Invalid partnership format'}), 400
-                type_details, amount = partner['type'], partner['amount']
-                existing_givings = next((p for p in chk_user.givings if p.type == type_details), None)
-                if existing_givings:
-                    existing_givings.amount += amount
-                    existing_givings.updatedAt = datetime.now()
-                else:
-                    chk_user.add_giving(type_details, amount, createdAt=datetime.now())
-        chk_user.save()
-    else:
-        return jsonify({'error': 'Member not found in database'}), 404
+        email = kwargs['email']
+        if not email:
+            return jsonify({'error': 'Email is required'}), 400
+        
+        chk_user = storage.get_user_by_email(email)
+        if chk_user:
+            if givings:
+                for partner in givings:
+                    if 'type' not in partner or 'amount' not in partner:
+                        return jsonify({'error': 'Invalid partnership format'}), 400
+                    type_details, amount = partner['type'], partner['amount']
+                    existing_givings = next((p for p in chk_user.givings if p.type == type_details), None)
+                    if existing_givings:
+                        existing_givings.amount += amount
+                        existing_givings.updatedAt = datetime.now()
+                    else:
+                        chk_user.add_giving(type_details, amount, createdAt=datetime.now())
+            chk_user.save()
+        else:
+            return jsonify({'error': 'Member not found in database'}), 404
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
 
 @app_look.route('/add-member', methods=['POST'])
 @jwt_required()
