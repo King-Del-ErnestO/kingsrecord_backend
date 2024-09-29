@@ -8,7 +8,7 @@ class User(mongoengine.Document):
     title = mongoengine.StringField(max_length=100, required=False)
     firstName = mongoengine.StringField(max_length=100, required=True)
     lastName = mongoengine.StringField(max_length=100, required=True)
-    Date = mongoengine.StringField(default=datetime.datetime.now().strftime('%Y-%m-%d'))
+    # Date = mongoengine.StringField(default=datetime.datetime.now().strftime('%Y-%m-%d'))
     email = mongoengine.StringField(max_length=100, required=True)
     phoneNumber = mongoengine.StringField(max_length=100, required=False)
     birthDate = mongoengine.StringField(required=True)
@@ -30,7 +30,7 @@ class User(mongoengine.Document):
         self.title = kwargs.get('title', None)
         self.firstName = kwargs.get('firstName', None)
         self.lastName = kwargs.get('lastName', None)
-        self.Date = kwargs.get('Date', None)
+        # self.Date = kwargs.get('Date', None)
         self.email = kwargs.get('email', None)
         self.phoneNumber = kwargs.get('phoneNumber', None)
         self.partnership = kwargs.get('partnership', None)
@@ -52,12 +52,12 @@ class User(mongoengine.Document):
         self.updatedAt = datetime.datetime.now()
         self.save()
 
-    def add_partnership(self, type, amount, createdAt):
-        self.partnership.append(Partnership(type=type, amount=amount, createdAt=createdAt))
+    def add_partnership(self, type, amount, Date, createdAt):
+        self.partnership.append(Partnership(type=type, amount=amount, Date=Date, createdAt=createdAt))
         self.save()
 
-    def add_giving(self, type, amount, createdAt):
-        self.givings.append(Givings(type=type, amount=amount, createdAt=createdAt))
+    def add_giving(self, type, amount, Date, createdAt):
+        self.givings.append(Givings(type=type, amount=amount, Date=Date, createdAt=createdAt))
         self.save()
 
     def __str__(self):

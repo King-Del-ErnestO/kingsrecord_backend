@@ -20,12 +20,12 @@ def add_partnership():
             'title': data.get('title'),
             'firstName': data.get('firstName'),
             'lastName': data.get('lastName'),
-            'Date': data.get('Date'),
             'email': data.get('email'),
             'phoneNumber': data.get('phoneNumber'),
             'admin': admin_id 
         }
         partnerships = data.get('partnerships', [])
+        Date = data.get('Date')
 
         if not kwargs['firstName'] or not kwargs['lastName'] or not kwargs['Date'] \
         or not kwargs['email'] or not kwargs['phoneNumber']:
@@ -49,7 +49,7 @@ def add_partnership():
                         existing_partnership.amount += amount
                         existing_partnership.updatedAt = datetime.now()
                     else:
-                        chk_user.add_partnership(type_details, amount, createdAt=datetime.now())
+                        chk_user.add_partnership(type_details, amount, Date, createdAt=datetime.now())
             chk_user.save()
             return jsonify({'message': 'Partnership added successfully'}), 201
         else:
@@ -70,12 +70,12 @@ def add_givings():
             'title': data.get('title'),
             'firstName': data.get('firstName'),
             'lastName': data.get('lastName'),
-            'Date': data.get('Date'),
             'email': data.get('email'),
             'phoneNumber': data.get('phoneNumber'),
             'admin': admin_id 
         }
         givings = data.get('givings', [])
+        Date = data.get('Date')
 
         if not kwargs['firstName'] or not kwargs['lastName'] or not kwargs['Date'] \
         or not kwargs['email'] or not kwargs['phoneNumber']:
@@ -99,7 +99,7 @@ def add_givings():
                         existing_givings.amount += amount
                         existing_givings.updatedAt = datetime.now()
                     else:
-                        chk_user.add_giving(type_details, amount, createdAt=datetime.now())
+                        chk_user.add_giving(type_details, amount, Date, createdAt=datetime.now())
             chk_user.save()
             return jsonify({'message': 'Givings added successfully'}), 201
         else:
@@ -156,18 +156,24 @@ def get_form_data():
     total_partnership_sum = 0
     total_givings_sum = 0
     for user in users:
-        try:
-            date_obj = datetime.strptime(user.Date, '%Y-%m-%d')
-        except ValueError:
-            continue
-        if (month and date_obj.month != int(month)) or (year and date_obj.year != int(year)):
-            continue
         partnership_total = 0
         givings_total = 0
         for p in user.partnership:
+            try:
+                date_obj = datetime.strptime(p.Date, '%Y-%m-%d')
+            except ValueError:
+                continue
+            if (month and date_obj.month != int(month)) or (year and date_obj.year != int(year)):
+                continue
             partnership_total += p.amount
         
         for g in user.givings:
+            try:
+                date_obj = datetime.strptime(g.Date, '%Y-%m-%d')
+            except ValueError:
+                continue
+            if (month and date_obj.month != int(month)) or (year and date_obj.year != int(year)):
+                continue
             givings_total += g.amount
 
         total_partnership_sum += partnership_total
@@ -181,8 +187,8 @@ def get_form_data():
             'Date': user.Date,
             'email': user.email,
             'phoneNumber': user.phoneNumber,
-            'partnerships': [{'type': p.type, 'amount': p.amount} for p in user.partnership],
-            'givings': [{'type': g.type, 'amount': g.amount} for g in user.givings],
+            'partnerships': [{'type': p.type, 'amount': p.amount, 'Date': p.Date} for p in user.partnership],
+            'givings': [{'type': g.type, 'amount': g.amount, 'Date': g.Date} for g in user.givings],
             # 'totalPartnership': partnership_total,
             # 'totalGivings': givings_total,
             'total': total_amount
@@ -204,14 +210,14 @@ def get_total_partnership_yearly(year):
         return jsonify({'message': 'No form data found'}), 401
     total_partnership_sum = 0
     for user in users:
-        try:
-            date_obj = datetime.strptime(user.Date, '%Y-%m-%d')
-        except ValueError:
-            continue
-        if date_obj.year != int(year):
-            continue
         partnership_total = 0
         for p in user.partnership:
+            try:
+                date_obj = datetime.strptime(p.Date, '%Y-%m-%d')
+            except ValueError:
+                continue
+            if date_obj.year != int(year):
+                continue
             partnership_total += p.amount
         total_partnership_sum += partnership_total
 
@@ -242,6 +248,12 @@ def get_total_givings_yearly(year):
             continue
         givings_total = 0
         for p in user.givings:
+            try:
+                date_obj = datetime.strptime(p.Date, '%Y-%m-%d')
+            except ValueError:
+                continue
+            if date_obj.year != int(year):
+                continue
             givings_total += p.amount
         total_giving_sum += givings_total
     return jsonify({
@@ -282,14 +294,14 @@ def get_total_partnership(month, year):
         return jsonify({'message': 'No form data found'}), 401
     total_partnership_sum = 0
     for user in users:
-        try:
-            date_obj = datetime.strptime(user.Date, '%Y-%m-%d')
-        except ValueError:
-            continue
-        if (month and date_obj.month != int(month)) or (year and date_obj.year != int(year)):
-            continue
         partnership_total = 0
         for p in user.partnership:
+            try:
+                date_obj = datetime.strptime(p.Date, '%Y-%m-%d')
+            except ValueError:
+                continue
+            if (month and date_obj.month != int(month)) or (year and date_obj.year != int(year)):
+                continue
             partnership_total += p.amount
         total_partnership_sum += partnership_total
     return jsonify({
@@ -311,14 +323,14 @@ def get_total_givings(month, year):
         return jsonify({'message': 'No form data found'}), 401
     total_giving_sum = 0
     for user in users:
-        try:
-            date_obj = datetime.strptime(user.Date, '%Y-%m-%d')
-        except ValueError:
-            continue
-        if (month and date_obj.month != int(month)) or (year and date_obj.year != int(year)):
-            continue
         givings_total = 0
         for p in user.givings:
+            try:
+                date_obj = datetime.strptime(p.Date, '%Y-%m-%d')
+            except ValueError:
+                continue
+            if (month and date_obj.month != int(month)) or (year and date_obj.year != int(year)):
+                continue
             givings_total += p.amount
         total_giving_sum += givings_total
     return jsonify({
