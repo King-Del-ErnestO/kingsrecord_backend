@@ -3,10 +3,10 @@ from api.v1.views import app_look
 from database.db import KingsRecordDatabase
 from datetime import datetime, timedelta
 from flask_jwt_extended import create_access_token, get_jwt_identity, \
-    jwt_required
+    jwt_required, get_jwt
 
 storage = KingsRecordDatabase()
-
+jwt_blacklist = set()
 @app_look.route('/admin-register', methods=['POST'])
 def reg_admin():
     """Registers a new admin account"""
@@ -52,3 +52,11 @@ def login_admin():
     return jsonify({ 'firstName': user.firstName,
                     'message': 'Logged in successfully'
                     , 'access_token': access_token}), 200
+
+@app_look.route('/admin-logout', methods=['POST'])
+@jwt_required()
+def logout_admin():
+    """Logs out an admin by blacklisting the JWT token"""
+    jti = get_jwt()['jti']
+    jwt_blacklist.add(jti)
+    return jsonify({"message": "Logged out successfully"}), 200
