@@ -20,7 +20,6 @@ else:
 # def close_connection(exception=None):
 #     KingsRecordDatabase.end_session()
 
-
 @app.errorhandler(404)
 @cross_origin()
 def notFound(err):
