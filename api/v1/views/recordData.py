@@ -187,9 +187,6 @@ def get_member(email):
     users = storage.get_admin_users(admin_id)
     if not users:
         return jsonify({'message': 'admin cant register member'}), 400
-    email = request.args.get('email')
-    if not email:
-        return jsonify({'error': 'Email is required'}), 400
     user = storage.get_user_by_email(email)
     if not user:
         return jsonify({'error': 'Member not found in database'}), 404
