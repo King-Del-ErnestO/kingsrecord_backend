@@ -176,9 +176,9 @@ def add_member():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
-@app_look.route('/verify-member', methods=['GET'])
+@app_look.route('/verify-member/<email>', methods=['GET'])
 @jwt_required()
-def get_member():
+def get_member(email):
     """Returns a member by email"""
     admin_id = get_jwt_identity()
     if not admin_id:
@@ -187,8 +187,7 @@ def get_member():
     users = storage.get_admin_users(admin_id)
     if not users:
         return jsonify({'message': 'admin cant register member'}), 400
-    data = request.json
-    email = data.get('email')
+    email = request.args.get('email')
     if not email:
         return jsonify({'error': 'Email is required'}), 400
     user = storage.get_user_by_email(email)
