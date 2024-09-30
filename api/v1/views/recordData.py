@@ -21,10 +21,10 @@ def add_partnership():
     try:
         data = request.json
         kwargs = {
-            'title': data.get('title'),
-            'firstName': data.get('firstName'),
-            'lastName': data.get('lastName'),
-            'email': data.get('email'),
+            'title': data.get('title').lower(),
+            'firstName': data.get('firstName').lower(),
+            'lastName': data.get('lastName').lower(),
+            'email': data.get('email').lower(),
             'phoneNumber': data.get('phoneNumber'),
             'admin': admin_id 
         }
@@ -77,10 +77,10 @@ def add_givings():
     try:
         data = request.json
         kwargs = {
-            'title': data.get('title'),
-            'firstName': data.get('firstName'),
-            'lastName': data.get('lastName'),
-            'email': data.get('email'),
+            'title': data.get('title').lower(),
+            'firstName': data.get('firstName').lower(),
+            'lastName': data.get('lastName').lower(),
+            'email': data.get('email').lower(),
             'phoneNumber': data.get('phoneNumber'),
             'admin': admin_id 
         }
@@ -129,10 +129,10 @@ def add_member():
     try:
         data = request.json
         kwargs = {
-            'title': data.get('title'),
-            'firstName': data.get('firstName'),
-            'lastName': data.get('lastName'),
-            'email': data.get('email'),
+            'title': data.get('title').lower(),
+            'firstName': data.get('firstName').lower(),
+            'lastName': data.get('lastName').lower(),
+            'email': data.get('email').lower(),
             'birthDate': data.get('birthDate'),
             'phoneNumber': data.get('phoneNumber'),
             'admin': admin_id 
